@@ -29,5 +29,4 @@ mvnw
 mvnw.cmd
 
 # Не нужно для многомодульного проекта
-src/
 '@ | Out-File -FilePath .gitignore -Encoding UTF8
