@@ -26,7 +26,7 @@ public class Main {
     
     public static void main(String[] args) {
         System.out.println("╔═══════════════════════════════════════════════════════╗");
-        System.out.println("║   Rick and Morty Characters Processor v1.0           ║");
+        System.out.println("║   Rick and Morty Characters Processor v1.0            ║");
         System.out.println("║   Обработка данных персонажей с использованием        ║");
         System.out.println("║   LinkedHashMap для сохранения порядка появления      ║");
         System.out.println("╚═══════════════════════════════════════════════════════╝");
@@ -322,7 +322,7 @@ public class Main {
      * Отображение главного меню
      */
     private static void showMenu() {
-        System.out.println("\n┌─────────────────────────────────────────────────┐");
+        System.out.println("\n┌───────────────────────────────────────────────┐");
         System.out.println("│              ГЛАВНОЕ МЕНЮ                       │");
         System.out.println("├─────────────────────────────────────────────────┤");
         System.out.println("│ 1. Выполнить основное задание                   │");

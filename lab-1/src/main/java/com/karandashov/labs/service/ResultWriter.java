@@ -12,7 +12,7 @@ import java.util.Map;
 public class ResultWriter {
 
     /**
-     * Записывает результаты в JSON-файл (без внешних библиотек)
+     * Записывает результаты в JSON-файл
      */
     public void writeToJson(LinkedHashMap<String, Integer> speciesCount, String outputPath) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {

@@ -29,7 +29,7 @@ public class SpeciesProcessor {
                 continue;
             }
             
-            // Используем getOrDefault для увеличения счётчика
+            // getOrDefault для увеличения счётчика
             // LinkedHashMap сохраняет порядок вставки ключей
             speciesCount.put(species, speciesCount.getOrDefault(species, 0) + 1);
         }
