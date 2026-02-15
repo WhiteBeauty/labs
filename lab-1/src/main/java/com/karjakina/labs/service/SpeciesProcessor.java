@@ -1,6 +1,6 @@
-package com.karandashov.labs.service;
+package com.karjakina.labs.service;
 
-import com.karandashov.labs.model.RickMortyCharacter;
+import com.karjakina.labs.model.RickMortyCharacter;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,9 +14,6 @@ public class SpeciesProcessor {
     
     /**
      * Подсчитывает количество персонажей по видам в порядке их первого появления
-     * 
-     * @param characters список персонажей
-     * @return LinkedHashMap, где ключ - вид, значение - количество персонажей этого вида
      */
     public LinkedHashMap<String, Integer> countSpeciesInOrder(List<RickMortyCharacter> characters) {
         LinkedHashMap<String, Integer> speciesCount = new LinkedHashMap<>();
@@ -39,8 +36,7 @@ public class SpeciesProcessor {
     
     /**
      * Выводит статистику по видам в консоль
-     * 
-     * @param speciesCount карта с подсчётом видов
+      speciesCount карта с подсчётом видов
      */
     public void printStatistics(LinkedHashMap<String, Integer> speciesCount) {
         System.out.println("\n=== Статистика по видам (в порядке первого появления) ===");

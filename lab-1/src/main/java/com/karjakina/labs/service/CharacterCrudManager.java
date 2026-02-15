@@ -1,10 +1,9 @@
-package com.karandashov.labs.service;
+package com.karjakina.labs.service;
 
-import com.karandashov.labs.model.RickMortyCharacter;
+import com.karjakina.labs.model.RickMortyCharacter;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,15 +14,15 @@ public class CharacterCrudManager {
     private final CsvReader csvReader;
 
     public CharacterCrudManager() {
+
         this.csvReader = new CsvReader();
     }
 
     /**
      * CREATE - Добавить нового персонажа
-     *
-     * @param filePath  путь к CSV-файлу
-     * @param character новый персонаж
-     * @throws IOException если возникла ошибка при работе с файлом
+      filePath  путь к CSV-файлу
+      character новый персонаж
+      IOException если возникла ошибка при работе с файлом
      */
     public void createCharacter(String filePath, RickMortyCharacter character) throws IOException {
         List<RickMortyCharacter> characters = csvReader.readCharacters(filePath);
@@ -48,11 +47,10 @@ public class CharacterCrudManager {
 
     /**
      * READ - Получить персонажа по ID
-     *
-     * @param filePath путь к CSV-файлу
-     * @param id       идентификатор персонажа
-     * @return Optional с персонажем, если найден
-     * @throws IOException если возникла ошибка при чтении файла
+     filePath путь к CSV-файлу
+     id       идентификатор персонажа
+     Optional с персонажем, если найден
+     IOException если возникла ошибка при чтении файла
      */
     public Optional<RickMortyCharacter> readCharacter(String filePath, int id) throws IOException {
         List<RickMortyCharacter> characters = csvReader.readCharacters(filePath);
@@ -63,10 +61,9 @@ public class CharacterCrudManager {
 
     /**
      * READ ALL - Получить всех персонажей
-     *
-     * @param filePath путь к CSV-файлу
-     * @return список всех персонажей
-     * @throws IOException если возникла ошибка при чтении файла
+     filePath путь к CSV-файлу
+     список всех персонажей
+     IOException если возникла ошибка при чтении файла
      */
     public List<RickMortyCharacter> readAllCharacters(String filePath) throws IOException {
         return csvReader.readCharacters(filePath);
@@ -74,11 +71,10 @@ public class CharacterCrudManager {
 
     /**
      * UPDATE - Обновить данные персонажа
-     *
-     * @param filePath         путь к CSV-файлу
-     * @param updatedCharacter обновлённый персонаж
-     * @return true, если персонаж был найден и обновлён
-     * @throws IOException если возникла ошибка при работе с файлом
+     filePath         путь к CSV-файлу
+     updatedCharacter обновлённый персонаж
+     true, если персонаж был найден и обновлён
+     IOException если возникла ошибка при работе с файлом
      */
     public boolean updateCharacter(String filePath, RickMortyCharacter updatedCharacter) throws IOException {
         List<RickMortyCharacter> characters = csvReader.readCharacters(filePath);
@@ -104,11 +100,10 @@ public class CharacterCrudManager {
 
     /**
      * DELETE - Удалить персонажа по ID
-     *
-     * @param filePath путь к CSV-файлу
-     * @param id       идентификатор персонажа
-     * @return true, если персонаж был найден и удалён
-     * @throws IOException если возникла ошибка при работе с файлом
+     filePath путь к CSV-файлу
+     id       идентификатор персонажа
+     true, если персонаж был найден и удалён
+     IOException если возникла ошибка при работе с файлом
      */
     public boolean deleteCharacter(String filePath, int id) throws IOException {
         List<RickMortyCharacter> characters = csvReader.readCharacters(filePath);
@@ -125,53 +120,10 @@ public class CharacterCrudManager {
     }
 
     /**
-     * Поиск персонажей по виду
-     *
-     * @param filePath путь к CSV-файлу
-     * @param species  вид для поиска
-     * @return список персонажей указанного вида
-     * @throws IOException если возникла ошибка при чтении файла
-     */
-    public List<RickMortyCharacter> findBySpecies(String filePath, String species) throws IOException {
-        List<RickMortyCharacter> characters = csvReader.readCharacters(filePath);
-        List<RickMortyCharacter> result = new ArrayList<>();
-
-        for (RickMortyCharacter character : characters) {
-            if (species.equalsIgnoreCase(character.getSpecies())) {
-                result.add(character);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Поиск персонажей по статусу
-     *
-     * @param filePath путь к CSV-файлу
-     * @param status   статус для поиска
-     * @return список персонажей с указанным статусом
-     * @throws IOException если возникла ошибка при чтении файла
-     */
-    public List<RickMortyCharacter> findByStatus(String filePath, String status) throws IOException {
-        List<RickMortyCharacter> characters = csvReader.readCharacters(filePath);
-        List<RickMortyCharacter> result = new ArrayList<>();
-
-        for (RickMortyCharacter character : characters) {
-            if (status.equalsIgnoreCase(character.getStatus())) {
-                result.add(character);
-            }
-        }
-
-        return result;
-    }
-
-    /**
      * Сохранение всех персонажей в CSV-файл
-     *
-     * @param filePath   путь к CSV-файлу
-     * @param characters список персонажей для сохранения
-     * @throws IOException если возникла ошибка при записи
+     filePath   путь к CSV-файлу
+     characters список персонажей для сохранения
+     IOException если возникла ошибка при записи
      */
     private void saveAllCharacters(String filePath, List<RickMortyCharacter> characters) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {

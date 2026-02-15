@@ -1,6 +1,6 @@
-package com.karandashov.labs.service;
+package com.karjakina.labs.service;
 
-import com.karandashov.labs.model.RickMortyCharacter;
+import com.karjakina.labs.model.RickMortyCharacter;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -89,6 +89,7 @@ public class CsvReader {
     /**
      * Разделение строки CSV с учётом кавычек
      */
+
     private String[] splitCsvLine(String line) {
         List<String> fields = new ArrayList<>();
         StringBuilder currentField = new StringBuilder();

@@ -1,4 +1,4 @@
-package com.karandashov.labs.model;
+package com.karjakina.labs.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
