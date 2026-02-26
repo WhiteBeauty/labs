@@ -57,7 +57,7 @@ public class ConnectionConfig {
 
             liquibase.update();  //
         } finally {
-            connection.close();  // обязательно закрываем соединение
+            connection.close();
         }
     }
     */
