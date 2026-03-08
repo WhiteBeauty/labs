@@ -7,31 +7,57 @@
     <groupId>com.karjakina.labs</groupId>
     <artifactId>my-labs-project</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-
-    <!--  Это корневой pom, поэтому при сборке не нужно паковать jar - указываем "pom"  -->
     <packaging>pom</packaging>
+
     <modules>
         <module>lab-1</module>
-        <module>lab-2</module>
         <module>lab-2</module>
     </modules>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Версии плагинов -->
         <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-        <maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
+        <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
+
+        <!-- Версии зависимостей -->
         <junit.version>6.0.2</junit.version>
+        <hikaricp.version>5.1.0</hikaricp.version>
+        <liquibase.version>4.25.1</liquibase.version>
+        <postgresql.version>42.7.3</postgresql.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!--  JUnit 5 (Jupiter) для тестирования  -->
+            <!-- JUnit 5 (Jupiter) для тестирования -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikaricp.version}</version>
+            </dependency>
+
+            <!-- Liquibase -->
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+            </dependency>
+
+            <!-- PostgreSQL JDBC Driver -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -44,6 +70,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+
+                <!-- Плагин для создания fat JAR -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

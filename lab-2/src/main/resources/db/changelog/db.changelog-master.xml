@@ -3,19 +3,14 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <changeSet id="1" author="student">
-        <createTable tableName="building">
-            <column name="id" type="SERIAL">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="address" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="floors" type="INTEGER">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    <changeSet id="initial-tag" author="karjakina">
+        <tagDatabase tag="v1.0.0-init"/>
     </changeSet>
+
+    <!-- Подключение чейнджсета с созданием таблицы building -->
+    <include relativeToChangelogFile="true"
+             file="ddl/2026-03-08--create-table-building.xml"/>
+
 </databaseChangeLog>

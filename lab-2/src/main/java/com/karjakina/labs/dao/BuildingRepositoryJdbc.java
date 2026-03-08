@@ -38,98 +38,80 @@ public class BuildingRepositoryJdbc implements BuildingRepository {
         createTableIfNotExists();
     }
 
+    // создаём таблицу, если её нет
     private void createTableIfNotExists() {
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.createStatement();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+
             statement.execute(SQL_CREATE_TABLE);
             System.out.println("Таблица 'building' проверена/создана успешно.");
+
         } catch (SQLException e) {
             System.out.println("Ошибка при создании таблицы: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-
-            }
         }
     }
 
     @Override
     public int save(BuildingEntity building) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+        // сохраняем здание и возвращаем его id
         int id = -1;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(SQL_INSERT);
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_INSERT)) {
+
             statement.setString(1, building.getAddress());
             statement.setInt(2, building.getFloors());
-            resultSet = statement.executeQuery();
+
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 id = resultSet.getInt("id");
             }
+
         } catch (SQLException e) {
             System.out.println("Ошибка при сохранении: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-
-            }
         }
+
         return id;
     }
 
     @Override
     public BuildingEntity findById(int id) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+        // ищем здание по id
         BuildingEntity building = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(SQL_FIND_BY_ID);
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_BY_ID)) {
+
             statement.setInt(1, id);
-            resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
                 building = new BuildingEntity();
                 building.setId(resultSet.getInt("id"));
                 building.setAddress(resultSet.getString("address"));
                 building.setFloors(resultSet.getInt("floors"));
             }
+
         } catch (SQLException e) {
             System.out.println("Ошибка поиска id=" + id + ": " + e.getMessage());
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-
-            }
+            e.printStackTrace();
         }
+
         return building;
     }
 
     @Override
     public List<BuildingEntity> findAll() {
+        // получаем все здания из базы
         List<BuildingEntity> buildings = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(SQL_FIND_ALL);
-            resultSet = statement.executeQuery();
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL)) {
+
+            ResultSet resultSet = statement.executeQuery();
+
             while (resultSet.next()) {
                 BuildingEntity building = new BuildingEntity();
                 building.setId(resultSet.getInt("id"));
@@ -137,71 +119,50 @@ public class BuildingRepositoryJdbc implements BuildingRepository {
                 building.setFloors(resultSet.getInt("floors"));
                 buildings.add(building);
             }
+
         } catch (SQLException e) {
             System.out.println("Ошибка при получении списка: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-
-            }
         }
+
         return buildings;
     }
 
     @Override
     public boolean update(BuildingEntity building) {
-        Connection connection = null;
-        PreparedStatement statement = null;
+        // обновляем здание по id
         boolean updated = false;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(SQL_UPDATE);
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE)) {
+
             statement.setString(1, building.getAddress());
             statement.setInt(2, building.getFloors());
             statement.setInt(3, building.getId());
+
             int rows = statement.executeUpdate();
             updated = rows > 0;
+
         } catch (SQLException e) {
             System.out.println("Ошибка обновления: " + e.getMessage());
-        } finally {
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-
-            }
+            e.printStackTrace();
         }
+
         return updated;
     }
 
     @Override
     public void deleteById(int id) {
-        // на всякий случай проверяем id
-        if (id <= 0) {
-            System.out.println("id не может быть меньше 0 ");
-        }
+        // удаляем здание по id
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_DELETE_BY_ID)) {
 
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(SQL_DELETE_BY_ID);
             statement.setInt(1, id);
             statement.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println("Ошибка удаления id=" + id + ": " + e.getMessage());
-        } finally {
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                System.out.println("Ошибка поиска: " + e.getMessage());
-            }
+            e.printStackTrace();
         }
     }
-
 }
