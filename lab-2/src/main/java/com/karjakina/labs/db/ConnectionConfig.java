@@ -75,29 +75,14 @@ public class ConnectionConfig {
 
     private static Properties loadProperties() {
         Properties properties = new Properties();
-        InputStream inputStream = null;
-        try {
-            inputStream = ConnectionConfig.class.getClassLoader()
-                    .getResourceAsStream(PROPERTIES_FILE);
 
-            if (inputStream == null) {
-                System.out.println("Файл " + PROPERTIES_FILE + " не найден!");
-                return properties;
-            }
-            properties.load(inputStream);
+        // из файла отказывался читать
+        properties.setProperty("db.url", "jdbc:postgresql://localhost:5432/postgres");
+        properties.setProperty("db.username", "postgres");
+        properties.setProperty("db.password", "123");
+        properties.setProperty("db.pool.size", "5");
 
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + e.getMessage());
-            e.printStackTrace();
-
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                }
-            }
-        }
+        System.out.println("Настройки подключения загружены из кода.");
 
         return properties;
     }
