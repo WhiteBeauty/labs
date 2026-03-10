@@ -35,7 +35,7 @@ public class BuildingRepositoryJdbc implements BuildingRepository {
 
     public BuildingRepositoryJdbc(DataSource dataSource) {
         this.dataSource = dataSource;
-        createTableIfNotExists();
+        //createTableIfNotExists(); //  теперь таблицу создаёт Liquibase (в идеале)
     }
 
     // создаём таблицу, если её нет

@@ -5,11 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
+    <!-- Тег для отслеживания версии -->
     <changeSet id="initial-tag" author="karjakina">
         <tagDatabase tag="v1.0.0-init"/>
     </changeSet>
 
-    <!-- Подключение чейнджсета с созданием таблицы building -->
+    <!-- Подключаем файл с созданием таблицы -->
     <include relativeToChangelogFile="true"
              file="ddl/2026-03-08--create-table-building.xml"/>
 

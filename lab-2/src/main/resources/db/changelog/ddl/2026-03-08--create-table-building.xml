@@ -6,6 +6,13 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
     <changeSet id="create-table-building" author="karjakina">
+        <!-- Если таблица уже есть помечаем миграцию как выполненную и идём дальше -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="building"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="building">
             <column name="id" type="SERIAL">
                 <constraints primaryKey="true" nullable="false"/>
