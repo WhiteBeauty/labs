@@ -4,6 +4,9 @@ import com.karjakina.labs.dao.BuildingRepository;
 import com.karjakina.labs.dao.BuildingRepositoryJdbc;
 import com.karjakina.labs.db.ConnectionConfig;
 import com.karjakina.labs.entity.BuildingEntity;
+import com.karjakina.labs.exception.BuildingNotFoundException;
+import com.karjakina.labs.service.BuildingService;
+import com.karjakina.labs.service.BuildingServiceImpl;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -15,77 +18,80 @@ public class Main {
 
         DataSource dataSource = ConnectionConfig.createDataSource();
         BuildingRepository buildingRepository = new BuildingRepositoryJdbc(dataSource);
+        BuildingService buildingService = new BuildingServiceImpl(buildingRepository);
 
-        demonstrateCrudOperations(buildingRepository);
+        demonstrateCrudOperations(buildingService);
 
         System.out.println("\n=== Приложение завершило работу ===");
     }
 
-    private static void demonstrateCrudOperations(BuildingRepository buildingRepository) {
+    private static void demonstrateCrudOperations(BuildingService buildingService) {
 
-        // --- CREATE ---
+        //  CREATE
         System.out.println("--- CREATE: сохранение зданий ---");
 
-        BuildingEntity firstBuilding = new BuildingEntity("ул. Ленина, д. 1", 5);
-        int firstId = buildingRepository.save(firstBuilding);
+        int firstId = buildingService.save("ул. Ленина, д. 1", 5);
         System.out.println("Сохранено здание с id=" + firstId);
 
-        BuildingEntity secondBuilding = new BuildingEntity("пр. Мира, д. 42", 12);
-        int secondId = buildingRepository.save(secondBuilding);
+        int secondId = buildingService.save("пр. Мира, д. 42", 12);
         System.out.println("Сохранено здание с id=" + secondId);
 
-        BuildingEntity thirdBuilding = new BuildingEntity("ул. Садовая, д. 7", 3);
-        int thirdId = buildingRepository.save(thirdBuilding);
+        int thirdId = buildingService.save("ул. Садовая, д. 7", 3);
         System.out.println("Сохранено здание с id=" + thirdId);
 
-        // --- READ: findById ---
+        // READ: findById
         System.out.println("\n--- READ: поиск по id ---");
 
-        BuildingEntity foundBuilding = buildingRepository.findById(firstId);
+        BuildingEntity foundBuilding = buildingService.findById(firstId);
         System.out.println("Найдено: " + foundBuilding);
 
-        BuildingEntity notFoundBuilding = buildingRepository.findById(999999);
-        System.out.println("Поиск по несуществующему id=999999: " + notFoundBuilding);
+        // READ: findByAddress
+        System.out.println("\n--- READ: поиск по адресу ---");
 
-        // --- READ: findAll ---
+        BuildingEntity byAddress = buildingService.findByAddress("пр. Мира, д. 42");
+        System.out.println("Найдено по адресу: " + byAddress);
+
+        //  READ: findAll
         System.out.println("\n--- READ: все здания ---");
 
-        // получаем все здания из базы
-        List<BuildingEntity> allBuildings = buildingRepository.findAll();
-// выводим каждое здание на консоль
+        List<BuildingEntity> allBuildings = buildingService.findAll();
         for (BuildingEntity building : allBuildings) {
             System.out.println("  " + building);
         }
 
-        // --- UPDATE ---
+        //  UPDATE
         System.out.println("\n--- UPDATE: обновление здания ---");
 
         BuildingEntity buildingToUpdate = new BuildingEntity(firstId, "ул. Ленина, д. 1 (обновлено)", 9);
-        boolean isUpdated = buildingRepository.update(buildingToUpdate);
-        System.out.println("Обновление id=" + firstId + " выполнено: " + isUpdated);
+        buildingService.update(buildingToUpdate);
+        System.out.println("Обновление id=" + firstId + " выполнено");
 
-        BuildingEntity nonExistentBuilding = new BuildingEntity(999999, "Несуществующий адрес", 1);
-        boolean isUpdatedNonExistent = buildingRepository.update(nonExistentBuilding);
-        System.out.println("Обновление несуществующего id=999999 выполнено: " + isUpdatedNonExistent);
-
-        BuildingEntity updatedBuilding = buildingRepository.findById(firstId);
+        BuildingEntity updatedBuilding = buildingService.findById(firstId);
         System.out.println("После обновления: " + updatedBuilding);
 
-        // --- DELETE ---
+        //  UPDATE несуществующего
+        System.out.println("\n--- UPDATE несуществующего здания ---");
+        try {
+            buildingService.update(new BuildingEntity(999999, "Адрес", 1));
+        } catch (BuildingNotFoundException e) {
+            System.out.println("Ожидаемое исключение: " + e.getMessage());
+        }
+
+        // DELETE
         System.out.println("\n--- DELETE: удаление здания ---");
 
-        buildingRepository.deleteById(thirdId);
+        buildingService.deleteById(thirdId);
         System.out.println("Удалено здание id=" + thirdId);
 
-        buildingRepository.deleteById(999999);
-        System.out.println("Удаление несуществующего id=999999 — ошибки нет");
-
         System.out.println("\nЗдания после удаления:");
-        buildingRepository.findAll().forEach(building -> System.out.println("  " + building));
+        buildingService.findAll().forEach(building -> System.out.println("  " + building));
 
-        // Повторный вызов findById для удалённой записи
-        System.out.println("\n---  findById для удалённого id=" + thirdId + " ---");
-        BuildingEntity deletedBuilding = buildingRepository.findById(thirdId);
-        System.out.println("Результат: " + deletedBuilding);
+        // findById несуществующего
+        System.out.println("\n--- findById для удалённого id=" + thirdId + " ---");
+        try {
+            buildingService.findById(thirdId);
+        } catch (BuildingNotFoundException e) {
+            System.out.println("Ожидаемое исключение: " + e.getMessage());
+        }
     }
 }
