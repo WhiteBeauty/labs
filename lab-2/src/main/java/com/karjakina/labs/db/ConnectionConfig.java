@@ -18,10 +18,10 @@ import java.util.Properties;
 public class ConnectionConfig {
 
     private static final String PROPERTIES_FILE = "db.properties";
+
     public static DataSource createDataSource() {
         Properties properties = loadProperties();
 
-        // настраиваем пул соединений HikariCP
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(properties.getProperty("db.url"));
         hikariConfig.setUsername(properties.getProperty("db.username"));
@@ -34,7 +34,6 @@ public class ConnectionConfig {
         System.out.println("Инициализация пула соединений HikariCP...");
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
-        // попытка инициализировать Liquibase для создания таблиц
         try {
             initializeLiquibase(dataSource);
             System.out.println("Liquibase: таблицы созданы успешно.");
@@ -76,13 +75,20 @@ public class ConnectionConfig {
     private static Properties loadProperties() {
         Properties properties = new Properties();
 
-        // из файла отказывался читать
-        properties.setProperty("db.url", "jdbc:postgresql://localhost:5432/postgres");
-        properties.setProperty("db.username", "postgres");
-        properties.setProperty("db.password", "123");
-        properties.setProperty("db.pool.size", "5");
+        try (InputStream inputStream = ConnectionConfig.class
+                .getClassLoader()
+                .getResourceAsStream(PROPERTIES_FILE)) {
 
-        System.out.println("Настройки подключения загружены из кода.");
+            if (inputStream == null) {
+                throw new RuntimeException("Файл конфигурации не найден: " + PROPERTIES_FILE);
+            }
+
+            properties.load(inputStream);
+            System.out.println("Настройки подключения загружены из: " + PROPERTIES_FILE);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка при загрузке конфигурации: " + e.getMessage(), e);
+        }
 
         return properties;
     }
